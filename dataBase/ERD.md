@@ -1,9 +1,3 @@
-# WealthSight
-Easily display your income and expenses in a meaningful way!
----
-
-
-### ERD - Entity Relationship Diagram
 ```mermaid
 erDiagram
   USERS ||--o{ CATEGORIES : creates
@@ -75,8 +69,3 @@ erDiagram
     uuid household_id FK
   }
 ```
----
-### Decision Tree Wireframe
-![alt text](<DecisionTreeWireframe.png>)
-
----
