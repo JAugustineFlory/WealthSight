@@ -17,6 +17,7 @@ erDiagram
     string username
     string email
     string password_hash
+    integer default_payoff_months
   }
   CATEGORIES {
     uuid id PK
@@ -33,6 +34,8 @@ erDiagram
     decimal current_debt
     decimal apr
     date due_date
+    integer payoff_period_months
+    boolean autopay_enabled
   }
   BILLS {
     uuid id PK
@@ -50,7 +53,7 @@ erDiagram
     uuid category_id FK
     string source
     decimal amount
-    date date
+    date date_received
   }
   BUDGETS {
     uuid id PK

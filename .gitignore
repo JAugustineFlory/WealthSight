@@ -1,0 +1,11 @@
+node_modules
+*.txt
+
+# Ignore every .env file...
+.env
+.enve.local
+.env.*.local
+
+# ... keep template documents
+!.env.example
+!.env.development
