@@ -239,6 +239,7 @@ npm test
 
 ## Roadmap
 
+- [x] Database schema: 6 core tables migrated and verified
 - [ ] Core CRUD: cards, bills, income, budgets
 - [ ] Persistent dashboard summary (hero layout)
 - [ ] Bill status tracking (Paid/Unpaid/Upcoming) with due-date display
@@ -261,12 +262,53 @@ rather than implying a finished product.)*
 <details>
 <summary>Click to expand: dev log</summary>
 
+### 2026-08-26
+- Server scaffolded: Express app (`index.js`), `.env`, `knexfile.js`
+  with separate development/test database configs.
+- Local Postgres set up via `docker-compose.yaml` (db-only container,
+  no app containerization for this project since deploy target is
+  Render).
+- Built and verified all 6 core migrations against a live database:
+  `users`, `categories`, `cards`, `bills`, `income`, `budgets`.
+- Deliberate foreign-key strategy applied per relationship: `user_id`
+  CASCADE everywhere; `card_id`/`category_id` on dependent tables
+  SET NULL, so deleting a card or category doesn't destroy bill/
+  income/budget history.
+- Added CHECK constraints for `categories.type` and `bills.status` to
+  enforce valid values at the database level.
+- Extended `cards` beyond the original ERD: `payoff_period_months`
+  (nullable, falls back to a new `users.default_payoff_months`) and
+  `autopay_enabled`, supporting per-card snowball/avalanche payoff
+  targeting. Suggested/next payment is calculated on the fly from
+  `current_debt`, `apr`, and payoff period — not stored, to avoid
+  stale derived data.
+- Extended `bills` with a `recurring` flag to distinguish one-time
+  expenses from repeating bills.
+- Fixed a naming inconsistency (`income.dateReceived` →
+  `date_received`) to match snake_case convention used throughout.
+- ERD.md and this README's embedded ERD updated to match the final,
+  verified schema.
+
+### 2026-08-25
+- Decision tree wireframe built and iterated in Lucidchart — added
+  return-loop arrows so every sub-view routes back to the Dashboard
+  instead of dead-ending.
+- POC wireframes built for Login/Signup, Dashboard, Income, Expenses,
+  Cards, and Budget screens.
+- Settled on a persistent hero + swappable content-area layout for the
+  Dashboard (React Router layout route with a nested `<Outlet />`),
+  so summary totals stay visible across every sub-view.
+- README structured section by section: table of contents ordering,
+  hero/pitch copy, Description, collapsible `<details>` sections for
+  the API table and dev log.
+- Full project Kanban populated (Icebox → Needs Discussion → In
+  Progress → Review → Completed) covering the remaining scope of
+  the build.
+
 ### 2026-08-24
 - Project scoped: WealthSight, a manual-entry finance tracker built
   around the "delayed gratification" design philosophy.
 - Problem statement, user stories, and ERD finalized.
-- Decision tree wireframe and initial POC wireframes (Login/Signup,
-  Dashboard, Income, Expenses, Cards, Budget) completed in Lucidchart.
 - Repo initialized, license selected (MIT), README scaffolded.
 
 </details>
