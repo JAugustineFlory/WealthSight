@@ -198,6 +198,8 @@ erDiagram
 
 | Method | Route | Description |
 |---|---|---|
+| POST | `/users/signup` | Create a new user account |
+| POST | `/users/login` | Log in, sets an HttpOnly session cookie |
 | GET | `/api/cards` | Get all cards for the logged-in user |
 | POST | `/api/cards` | Create a new card |
 | GET | `/api/cards/:id` | Get a single card |
@@ -219,8 +221,8 @@ erDiagram
 | PUT | `/api/budgets/:id` | Update a budget |
 | DELETE | `/api/budgets/:id` | Delete a budget |
 
-*(Update this table as routes are actually built — this is the planned
-set, not yet all implemented.)*
+*(`/users/signup` and `/users/login` are implemented and tested. The
+rest are the planned set, not yet built.)*
 
 </details>
 
@@ -240,7 +242,9 @@ npm test
 ## Roadmap
 
 - [x] Database schema: 6 core tables migrated and verified
+- [x] User signup + login (bcrypt password hashing, HttpOnly cookie session)
 - [ ] Core CRUD: cards, bills, income, budgets
+- [ ] Auth middleware (protect routes, scope data to logged-in user)
 - [ ] Persistent dashboard summary (hero layout)
 - [ ] Bill status tracking (Paid/Unpaid/Upcoming) with due-date display
 - [ ] Category-based budgeting with visual breakdown
@@ -261,6 +265,20 @@ rather than implying a finished product.)*
 
 <details>
 <summary>Click to expand: dev log</summary>
+
+### 2026-08-26 (cont.)
+- Installed `bcrypt` for password hashing.
+- Built `routes/users.js` (Express Router pattern) and mounted it in
+  `index.js` at `/users`.
+- `POST /users/signup` — hashes password with bcrypt (10 salt rounds),
+  inserts the user, returns `id`/`username`/`email` only (never the
+  hash). Tested and verified against the live database.
+- `POST /users/login` — looks up user by email, compares password via
+  `bcrypt.compare`, returns a generic 401 for both "no such email" and
+  "wrong password" to avoid a user-enumeration vulnerability. On
+  success, sets an `HttpOnly` cookie (`userId`, 24hr expiry) and
+  returns the user's public fields. Tested via Postman — response
+  body and `Set-Cookie` both verified.
 
 ### 2026-08-26
 - Server scaffolded: Express app (`index.js`), `.env`, `knexfile.js`
@@ -288,6 +306,8 @@ rather than implying a finished product.)*
   `date_received`) to match snake_case convention used throughout.
 - ERD.md and this README's embedded ERD updated to match the final,
   verified schema.
+- Installed encryption node for password security
+
 
 ### 2026-08-25
 - Decision tree wireframe built and iterated in Lucidchart — added

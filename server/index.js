@@ -7,8 +7,13 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+const usersRouter = require('./routes/users');
+
+
+
 app.use(cors());//Cross Origin Resource Sharing | Tells the browser we trust our sources
 app.use(express.json());//Parses JSON into usable JS
+app.use('/users', usersRouter);
 
 
 //Confirm server is online
