@@ -200,29 +200,36 @@ erDiagram
 |---|---|---|
 | POST | `/users/signup` | Create a new user account |
 | POST | `/users/login` | Log in, sets an HttpOnly session cookie |
-| GET | `/api/cards` | Get all cards for the logged-in user |
-| POST | `/api/cards` | Create a new card |
-| GET | `/api/cards/:id` | Get a single card |
-| PUT | `/api/cards/:id` | Update a card |
-| DELETE | `/api/cards/:id` | Delete a card |
-| GET | `/api/bills` | Get all bills |
-| POST | `/api/bills` | Create a new bill |
-| GET | `/api/bills/:id` | Get a single bill |
-| PUT | `/api/bills/:id` | Update a bill |
-| DELETE | `/api/bills/:id` | Delete a bill |
-| GET | `/api/income` | Get all income entries |
-| POST | `/api/income` | Create a new income entry |
-| GET | `/api/income/:id` | Get a single income entry |
-| PUT | `/api/income/:id` | Update an income entry |
-| DELETE | `/api/income/:id` | Delete an income entry |
-| GET | `/api/budgets` | Get all budgets |
-| POST | `/api/budgets` | Create a new budget |
-| GET | `/api/budgets/:id` | Get a single budget |
-| PUT | `/api/budgets/:id` | Update a budget |
-| DELETE | `/api/budgets/:id` | Delete a budget |
+| GET | `/cards` | Get all cards for the logged-in user |
+| POST | `/cards` | Create a new card |
+| GET | `/cards/:id` | Get a single card |
+| PUT | `/cards/:id` | Update a card |
+| DELETE | `/cards/:id` | Delete a card |
+| GET | `/bills` | Get all bills |
+| POST | `/bills` | Create a new bill |
+| GET | `/bills/:id` | Get a single bill |
+| PUT | `/bills/:id` | Update a bill |
+| DELETE | `/bills/:id` | Delete a bill |
+| GET | `/income` | Get all income entries |
+| POST | `/income` | Create a new income entry |
+| GET | `/income/:id` | Get a single income entry |
+| PUT | `/income/:id` | Update an income entry |
+| DELETE | `/income/:id` | Delete an income entry |
+| GET | `/budgets` | Get all budgets |
+| POST | `/budgets` | Create a new budget |
+| GET | `/budgets/:id` | Get a single budget |
+| PUT | `/budgets/:id` | Update a budget |
+| DELETE | `/budgets/:id` | Delete a budget |
+| GET | `/categories` | Get all categories |
+| POST | `/categories` | Create a new category |
+| GET | `/categories/:id` | Get a single category |
+| PUT | `/categories/:id` | Update a category |
+| DELETE | `/categories/:id` | Delete a category |
 
-*(`/users/signup` and `/users/login` are implemented and tested. The
-rest are the planned set, not yet built.)*
+All routes above (except signup/login) require authentication via the
+`userId` HttpOnly cookie set at login, and are scoped so a user can only
+read/modify their own data. All are implemented and manually tested via
+Postman.
 
 </details>
 
@@ -243,8 +250,8 @@ npm test
 
 - [x] Database schema: 6 core tables migrated and verified
 - [x] User signup + login (bcrypt password hashing, HttpOnly cookie session)
-- [ ] Core CRUD: cards, bills, income, budgets
-- [ ] Auth middleware (protect routes, scope data to logged-in user)
+- [x] Auth middleware (protect routes, scope data to logged-in user)
+- [x] Full CRUD: cards, bills, income, budgets, categories
 - [ ] Persistent dashboard summary (hero layout)
 - [ ] Bill status tracking (Paid/Unpaid/Upcoming) with due-date display
 - [ ] Category-based budgeting with visual breakdown
@@ -265,6 +272,29 @@ rather than implying a finished product.)*
 
 <details>
 <summary>Click to expand: dev log</summary>
+
+### 2026-08-27
+- Built `middleware/checkAuth.js`: reads the `userId` HttpOnly cookie,
+  attaches it to `req.userId`, or rejects with 401 if absent. Verified
+  with a temporary protected test route before wiring it into real
+  routes.
+- Built full CRUD (`routes/cards.js`) as the template pattern for every
+  other resource: every route behind `checkAuth`, every query scoped to
+  `where({ user_id: req.userId })`, ownership checked on GET-one/PUT/
+  DELETE, `user_id` always set server-side on insert (never trusted from
+  the client body).
+- Applied the same pattern to `routes/bills.js`, `routes/income.js`,
+  `routes/budgets.js`, `routes/categories.js` — full CRUD on all five
+  resources.
+- `bills` (and `income`/`budgets` via `category_id`) add an extra
+  ownership check on any foreign key submitted in the request body —
+  e.g. a bill's `card_id` must belong to the requesting user, not just
+  exist — to prevent one user from tagging their data with another
+  user's card/category.
+- All 26 routes (signup/login + 5x full CRUD) manually tested end-to-end
+  via Postman against the live database.
+- Fixed a real bug caught during testing: `budgets.js` initially queried
+  a nonexistent `budget` table (singular) instead of `budgets`.
 
 ### 2026-08-26 (cont.)
 - Installed `bcrypt` for password hashing.
