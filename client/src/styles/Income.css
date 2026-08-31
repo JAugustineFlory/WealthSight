@@ -1,0 +1,65 @@
+.income-page {
+    width: 100%;
+    max-width: 900px;
+}
+
+.income-add-row {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+}
+
+.income-add-row input {
+    flex: 1;
+}
+
+.recurring-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+}
+
+.recurring-label input[type="checkbox"] {
+    accent-color: var(--accent-strong);
+    width: 16px;
+    height: 16px;
+}
+
+.recurring-tag {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: normal;
+}
+
+.income-total {
+    font-weight: bold;
+    color: var(--accent-strong);
+    margin-bottom: 12px;
+}
+
+.income-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.income-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.income-row span {
+    flex: 1;
+}

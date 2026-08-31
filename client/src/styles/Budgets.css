@@ -1,0 +1,45 @@
+.budgets-page {
+    width: 100%;
+    max-width: 900px;
+}
+
+.budgets-add-row {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+}
+
+.budgets-add-row input,
+.budgets-add-row select {
+    flex: 1;
+}
+
+.quick-add-category {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.budgets-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.budgets-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.budgets-row span {
+    flex: 1;
+}

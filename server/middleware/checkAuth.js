@@ -1,5 +1,4 @@
 
-//middleware gets 'next' in addition to 'req' and 'res'
 function checkAuth(req, res, next) {
     const userId = req.cookies.userId;
 

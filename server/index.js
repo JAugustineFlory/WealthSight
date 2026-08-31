@@ -17,7 +17,10 @@ const categoriesRouter = require('./routes/categories');
 
 const checkAuth = require('./middleware/checkAuth');
 
-app.use(cors());//Cross Origin Resource Sharing | Tells the browser we trust our sources
+app.use(cors({
+    origin: 'http://localhost:5173'/**Replace later with actual url, like "https://wealthsight.onrender.com" */,
+    credentials: true,
+}));//Cross Origin Resource Sharing | Tells the browser we trust our sources
 app.use(express.json());//Parses JSON into usable JS
 app.use(cookieParser());
 app.use('/users', usersRouter);
@@ -26,7 +29,6 @@ app.use('/bills', billsRouter);
 app.use('/income', incomeRouter);
 app.use('/budgets', budgetsRouter);
 app.use('/categories', categoriesRouter);
-
 
 //Confirm server is online
 app.get('/', (req, res) => {

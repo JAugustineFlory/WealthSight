@@ -1,0 +1,122 @@
+.login-page {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.login-tagline {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 32px;
+    color: var(--accent-strong);
+    text-shadow: 0 0 12px var(--accent-glow);
+}
+
+.login-content {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.login-form-panel {
+    flex: 1;
+    min-width: 280px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.12);
+}
+
+.login-form-panel form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.login-buttons button.primary {
+    font-weight: bold;
+    color: var(--accent-strong);
+    border-color: var(--accent-strong);
+}
+
+.login-preview-panel {
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.preview-stat-row {
+    display: flex;
+    gap: 16px;
+}
+
+.preview-stat {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    text-align: center;
+}
+
+.preview-label {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.preview-value {
+    margin: 4px 0 0;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--accent-strong);
+}
+
+.preview-graph {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dim);
+}
+
+.preview-budget {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.preview-budget-title {
+    margin: 0;
+    padding: 8px 12px;
+    background: var(--bg-panel-light);
+    color: var(--accent-strong);
+    font-size: 0.9rem;
+}
+
+.preview-budget table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.preview-budget td {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+}
+
+.preview-budget td:last-child {
+    text-align: right;
+}

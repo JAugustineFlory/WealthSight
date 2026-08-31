@@ -54,6 +54,7 @@ erDiagram
     string source
     decimal amount
     date date_received
+    boolean recurring
   }
   BUDGETS {
     uuid id PK

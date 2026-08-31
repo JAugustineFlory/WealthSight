@@ -2,9 +2,27 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const knex = require('knex')(require('../knexfile').development);
+const checkAuth = require('../middleware/checkAuth');
 
 //Signup
 //using async because both hashing the password and querying the database return promises
+router.get('/me', checkAuth, async (req, res) => {
+    try {
+        const user = await knex('users')
+            .where({ id: req.userId })
+            .select('id', 'username', 'email', 'default_payoff_months')
+            .first();
+
+        if (!user) {
+            return res.status(401).json({ message: 'Not authenticated' });
+        }
+
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ message: `Error: ${err}` });
+    }
+});
+
 router.post('/signup', async (req,res) => {
     try {
         //defines req.body and sets it to store user info
@@ -17,6 +35,11 @@ router.post('/signup', async (req,res) => {
             //returns id, username, and email
             .returning(['id', 'username', 'email']);
 
+        res.cookie('userId', newUser.id, {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+        
         res.status(201).json(newUser);
     } catch (err) {
         res.status(400).json({ message: `Error: ${err}` });

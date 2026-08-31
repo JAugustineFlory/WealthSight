@@ -1,0 +1,124 @@
+.cards-page {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.cards-add-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 16px;
+}
+
+.cards-add-row input {
+    padding: 6px;
+    width: 130px;
+}
+
+.cards-add-row input[type="date"] {
+    width: 150px;
+}
+
+.field-with-label {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.field-with-label label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.payoff-slider {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 180px;
+}
+
+.payoff-slider label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.payoff-slider input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent-strong);
+}
+
+.autopay-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.autopay-label input[type="checkbox"] {
+    accent-color: var(--accent-strong);
+    width: 16px;
+    height: 16px;
+}
+
+.cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cards-table {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cards-table-header,
+.cards-table-row {
+    display: grid;
+    grid-template-columns: 1.8fr 1.6fr 0.7fr 1fr 1.4fr 0.8fr 1.2fr;
+    gap: 12px;
+    align-items: center;
+    padding: 10px 14px;
+}
+
+.cards-table-header {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cards-table-row {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+}
+
+.cards-table-row.high-utilization {
+    border-color: var(--danger);
+    background: rgba(255, 77, 94, 0.1);
+    box-shadow: 0 0 14px var(--danger-glow);
+}
+
+.card-nickname {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.autopay-tag {
+    color: var(--success);
+    font-weight: bold;
+}
+
+.cards-row-actions {
+    display: flex;
+    gap: 8px;
+}

@@ -39,6 +39,7 @@ router.post('/', checkAuth, async (req, res) => {
             amount,
             date_received,
             category_id,
+            recurring,
         } = req.body;
 
         if (category_id) {
@@ -58,6 +59,7 @@ router.post('/', checkAuth, async (req, res) => {
                 amount,
                 date_received,
                 category_id,
+                recurring,
             })
             .returning('*');
 
@@ -76,6 +78,7 @@ router.put('/:id', checkAuth, async (req, res) => {
             amount,
             date_received,
             category_id,
+            recurring,
         } = req.body;
 
         if (category_id) {
@@ -95,6 +98,7 @@ router.put('/:id', checkAuth, async (req, res) => {
                 amount,
                 date_received,
                 category_id,
+                recurring,
             })
             .returning('*');
 

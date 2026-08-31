@@ -1,0 +1,70 @@
+.bills-page {
+    width: 100%;
+    max-width: 1200px;
+}
+
+.bills-add-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    padding: 10px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+}
+
+.recurring-label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+}
+
+.quick-add-category {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.bills-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bills-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    flex-wrap: wrap;
+}
+
+.bills-row span {
+    flex: 1;
+    min-width: 80px;
+}
+
+.status-toggle {
+    display: flex;
+    gap: 4px;
+}
+
+.status-toggle button {
+    font-size: 0.75rem;
+    opacity: 0.5;
+}
+
+.status-toggle button.active {
+    opacity: 1;
+    font-weight: bold;
+    color: var(--accent-strong);
+    border-color: var(--accent-strong);
+    box-shadow: 0 0 8px var(--accent-glow);
+}

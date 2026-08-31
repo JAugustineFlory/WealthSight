@@ -13,6 +13,7 @@
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Roadmap](#roadmap)
+- [Planned Features / Next Update](#planned-features--next-update)
 - [Known Issues](#known-issues)
 - [Dev Log / Changelog](#dev-log--changelog)
 - [License](#license)
@@ -170,6 +171,7 @@ erDiagram
     string source
     decimal amount
     date date_received
+    boolean recurring
   }
   BUDGETS {
     uuid id PK
@@ -198,8 +200,9 @@ erDiagram
 
 | Method | Route | Description |
 |---|---|---|
-| POST | `/users/signup` | Create a new user account |
+| POST | `/users/signup` | Create a new user account (auto-logs in) |
 | POST | `/users/login` | Log in, sets an HttpOnly session cookie |
+| GET | `/users/me` | Get the currently authenticated user, or 401 |
 | GET | `/cards` | Get all cards for the logged-in user |
 | POST | `/cards` | Create a new card |
 | GET | `/cards/:id` | Get a single card |
@@ -252,19 +255,80 @@ npm test
 - [x] User signup + login (bcrypt password hashing, HttpOnly cookie session)
 - [x] Auth middleware (protect routes, scope data to logged-in user)
 - [x] Full CRUD: cards, bills, income, budgets, categories
-- [ ] Persistent dashboard summary (hero layout)
-- [ ] Bill status tracking (Paid/Unpaid/Upcoming) with due-date display
-- [ ] Category-based budgeting with visual breakdown
+- [x] Client-side auth: React Router layout + AuthContext, session
+      persists across reload via `/users/me`
+- [x] Login/Signup UI (single toggled form, auto-login on signup)
+- [x] Persistent dashboard summary (hero layout)
+- [x] Net income line graph (Recharts, real income vs. bills data by month)
+- [x] Full CRUD UI for Income, Bills, Cards, Budgets (add/edit/delete)
+- [x] Bill status tracking (Paid/Unpaid/Upcoming) via manual toggle buttons
+- [x] Credit utilization warning (highlights + hover message at ≥30%)
+- [x] Suggested payment calculation (amortized, per-card or user-default
+      payoff period)
+- [ ] Category-based budgeting with visual breakdown (chart)
 - [ ] Deploy to Render
+- [ ] Automated test suite (Jest/Supertest)
 - [ ] **Stretch:** Joint/household combined view
 - [ ] **Stretch:** Faker.js-seeded demo data
 
 ---
 
+## Planned Features / Next Update
+
+Built fast to hit the Project 3 deadline — these are deliberate, logged
+scope decisions, not oversights. Listed here so they're not mistaken for
+bugs, and so they're an honest, visible "what I'd do with more time" list
+for the presentation.
+
+- **Dedicated Categories management page.** Right now categories can only
+  be created via a small inline "+ Add Category" quick-add on the Bills
+  and Budgets pages (name only, type hardcoded to `expense`). A real
+  Categories page (list, edit, delete, and letting income categories be
+  typed as `income`) is the next real gap to close.
+- **Net income graph on the Dashboard.** ~~Currently a placeholder box.~~
+  Built — real Recharts line chart driven by actual income vs. bills
+  totals per month.
+- **Budget-vs-actual comparison.** Budgets currently just store a limit;
+  they don't yet compare against real spending in that category.
+- **Recurring bill automation.** The `recurring` flag exists on bills but
+  doesn't yet auto-generate the next month's bill or roll due dates
+  forward automatically.
+- **Snowball/avalanche guided payoff strategy.** Per-card payoff periods
+  are supported (so a user *can* manually target one card), but the app
+  doesn't yet suggest a strategy across multiple cards.
+- **Unsaved-changes confirmation.** Originally planned via React Router's
+  `useBlocker`; not yet wired in — currently navigating away from an
+  in-progress edit silently discards it.
+- **Themed delete-confirmation modal.** Delete actions currently use the
+  browser's native `window.confirm()` — functional and reliable, but it
+  can't be restyled to match the app's theme. A custom modal component
+  is the natural upgrade.
+- **Joint/household view.** Logged from the start as a stretch goal (see
+  ERD's `HOUSEHOLDS`/`HOUSEHOLD_MEMBERS` tables, already schema-ready but
+  unused).
+
+---
+
 ## Known Issues
 
-*(To be updated as they come up — documenting real limitations honestly
-rather than implying a finished product.)*
+- Wireframes were intentionally left rough in places, with the plan to
+  refine details during the build itself — a few small UI/UX gaps below
+  are a direct result of that, not missed requirements.
+- No automated test suite yet (Jest/Supertest set up in `package.json`
+  but no tests written) — all verification so far has been manual, via
+  Postman and in-browser testing.
+- `checkAuth` middleware confirms a session cookie is present but doesn't
+  re-verify the user still exists on every request (a separate `/users/me`
+  check does do this, but it isn't called on every single API request —
+  only on app load).
+- No CORS config for a production origin yet — `server/index.js` only
+  allows `http://localhost:5173`; will need updating once deployed.
+- Dates round-trip through Postgres with a timezone-shifted time
+  component (e.g. `T04:00:00.000Z` on a plain date column); display is
+  correctly trimmed to just the date in the UI, but worth knowing if this
+  ever gets queried directly.
+- No image/screenshot assets in the README yet — planned once the UI is
+  visually polished.
 
 ---
 
@@ -272,6 +336,102 @@ rather than implying a finished product.)*
 
 <details>
 <summary>Click to expand: dev log</summary>
+
+### 2026-08-30
+- Applied a cyber-themed dark palette (`theme.css`): navy background with
+  a hex-grid texture, glowing cyan accents, small glowing hexagon markers
+  on hero stats — shared CSS variables so every page/component stays
+  visually consistent rather than each having its own hardcoded colors.
+- Fixed a real architectural gap: the hero's totals weren't updating
+  after adding/editing/deleting on a sub-page (each page had its own
+  independent fetch, with no way to tell `Layout` to refetch). Fixed via
+  React Router's `<Outlet context={{ refreshHeroData }} />` — every
+  CRUD page now calls `refreshHeroData()` after a successful mutation.
+- Fixed page content rendering flush-left instead of centered under the
+  hero (`main` was missing `display: flex; justify-content: center`);
+  widened every page's max-width so centering didn't just make things
+  look cramped.
+- Added a real Recharts line graph to the Dashboard (net income by
+  month, computed from actual income/bills data — no placeholder,
+  no fabricated numbers).
+- Redesigned the Cards list from a flex-wrap layout (misaligned columns)
+  to a CSS grid with a shared column template between the header row and
+  every data row, guaranteeing alignment regardless of content length.
+  Replaced the payoff-months number input with a range slider (default
+  30), and labeled the due-date field, which was previously a bare
+  unlabeled date picker.
+- Added delete confirmation (`window.confirm`) on all four CRUD pages.
+- Added client-side required-field validation: Add/Save buttons are now
+  `disabled` until required fields are filled, closing the gap where an
+  incomplete submission could reach the server and surface a raw
+  Postgres error message directly to the user.
+- Added a `recurring` flag to `income` (new migration — `alterTable`,
+  not a fresh `createTable`, since the table already had real data),
+  matching the flag `bills` already had, for consistent paychecks.
+
+### 2026-08-29 (frontend build)
+- Built `client/src/utils/finance.js`: `calculateSuggestedPayment`
+  (amortization formula, with a 0%-APR and 0-months edge case handled),
+  `formatCurrency`, `formatDate` — pure functions, reused across every
+  page rather than duplicated per component.
+- Built the persistent hero in `Layout.jsx`: fetches cards/bills/income
+  once a user is authenticated, computes Monthly Income, Monthly
+  Expenses, Total Debt, Remaining, and Next Payment (soonest unpaid/
+  upcoming bill) live from real data. Each stat links to its section;
+  the link swaps to "Close" (via `useLocation`) when already on that
+  page, rather than showing a redundant link to the current page.
+- Added an `index: true` Dashboard route (separate from the always-
+  visible hero) showing the budget mini-table; net income graph is a
+  placeholder pending Recharts.
+- Built full add/edit/delete CRUD UI for **Income**, **Bills**,
+  **Cards**, and **Budgets** — one bundled `formData` object per page
+  (`useState`), one `handleSubmit` that POSTs or PUTs depending on
+  whether an entry is being edited, matching pattern across all four.
+- **Bills**: manual Paid/Unpaid/Upcoming status toggle buttons (per
+  design decision — status changes are a deliberate user action, not
+  automatic), optional card/category dropdowns.
+- **Cards**: credit utilization % calculated live (`current_debt /
+  credit_limit`), row highlights and shows a hover warning at ≥30%
+  utilization; suggested payment shown per card using the amortization
+  util, falling back to the user's `default_payoff_months` (added to
+  `GET /users/me`'s response) when a card has no override set.
+- Categories have no dedicated management page yet — Bills and Budgets
+  both include a small inline "+ Add Category" quick-create instead, to
+  keep the FK dropdowns usable without expanding scope further this
+  close to the deadline. Logged as a real gap in Planned Features, not
+  silently skipped.
+- README: added a **Planned Features / Next Update** section documenting
+  every deliberate scope cut made building fast under deadline, and
+  filled in **Known Issues** with real, current limitations (no test
+  suite yet, CORS is dev-only, `checkAuth` doesn't re-verify user
+  existence on every request).
+
+### 2026-08-28
+- Added `GET /users/me`: verifies the session cookie against a real
+  user in the database (closing the honest gap in `checkAuth`, which
+  only checks the cookie's *presence*, not whether that user still
+  exists) and returns the current user, or 401.
+- Added `credentials: true` + an explicit origin to server CORS config
+  — a wildcard origin can't be combined with credentialed (cookie)
+  requests; browsers block that combination outright.
+- Set up React Router with `createBrowserRouter` (the data-router API,
+  required for `useBlocker` later) and a `Layout` component using a
+  nested `<Outlet />` for the persistent-hero pattern planned during
+  wireframing.
+- Built `AuthContext`: calls `GET /users/me` once on app load
+  (`useEffect`, empty dependency array), stores the result in shared
+  state via React Context so any component can read auth status
+  without prop-drilling.
+- Built a single toggled Login/Signup form (`signUpMode` state) rather
+  than two separate components — shares all form state and submit
+  logic, calls whichever endpoint matches the current mode.
+- `POST /users/signup` now also sets the session cookie, so signup
+  auto-logs the user in — one request instead of chaining signup then
+  login.
+- `Layout` reads `{ user, loading }` from `AuthContext` and renders
+  Login, a loading state, or the real hero/Outlet view accordingly —
+  verified end-to-end: fresh load shows Login, signup/login both
+  transition straight to the authenticated view with no manual reload.
 
 ### 2026-08-27
 - Built `middleware/checkAuth.js`: reads the `userId` HttpOnly cookie,

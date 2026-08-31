@@ -1,0 +1,39 @@
+.dashboard-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.dashboard-graph {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    color: var(--text-dim);
+}
+
+.dashboard-budget {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}
+
+.dashboard-budget h3 {
+    margin: 0;
+    padding: 10px 12px;
+    background: var(--bg-panel-light);
+    color: var(--accent-strong);
+}
+
+.dashboard-budget table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dashboard-budget td {
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+}
